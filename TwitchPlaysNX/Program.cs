@@ -11,7 +11,13 @@ namespace TwitchPlaysNX
 {
     class Program
     {
-        static IPAddress server_address;
+        public static int port;
+        public static IPEndPoint ipe;
+        public static Socket sock;
+        public static float dx_l;
+        public static float dy_l;
+        public static float dx_r;
+        public static float dy_r;
 
         static void Main(string[] args)
         {
@@ -23,7 +29,11 @@ namespace TwitchPlaysNX
             }
             else
             {
-                server_address = IPAddress.Parse(args[0]); 
+                port = 8080;
+                ipe = new IPEndPoint(long.Parse(args[0]), port);
+                sock = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                sock.Connect(ipe);
+
 
             }
         }
