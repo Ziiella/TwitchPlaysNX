@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
@@ -20,13 +21,9 @@ namespace TwitchPlaysNX
 
     class Program
     {
-        public static int port;
+        static int port = 8080;
         public static IPEndPoint ipe;
         public static Socket sock;
-        public static float dx_l;
-        public static float dy_l;
-        public static float dx_r;
-        public static float dy_r;
 
         static void Main(string[] args)
         {
@@ -38,30 +35,56 @@ namespace TwitchPlaysNX
             }
             else
             {
-                port = 8080;
-                IPAddress address = IPAddress.Parse(args[0]);
-                ipe = new IPEndPoint(address, port);
+                Connect(args[0], port);
 
-                sock = new Socket(ipe.AddressFamily, SocketType.Dgram, ProtocolType.Unspecified);
 
-                sock.Connect(ipe);
-
-                if (sock.Connected)
+                Thread sendThread = new Thread(new ThreadStart(SendInput));
+                sendThread.Start();
+                while (true)
                 {
-                    Console.WriteLine("Connected!");
-                    //string message = "<HQiiii";
-                    //byte[] msg = BitConverter.GetBytes((long)message.Length) + BitConverter.GetBytes(0l) + message;
-                    //sock.SendTo(msg, ipe);
-                    sock.Close();
-                }
-                else
-                {
-                    Console.WriteLine("Error!");
-                    sock.Close();
+
                 }
 
 
             }
         }
+
+        static void Connect(string ipAddress, int Port)
+        {
+
+            IPAddress address = IPAddress.Parse(ipAddress);
+            ipe = new IPEndPoint(address, port);
+
+            sock = new Socket(ipe.AddressFamily, SocketType.Dgram, ProtocolType.Unspecified);
+
+            sock.Connect(ipe);
+
+            if (sock.Connected)
+            {
+                Console.WriteLine("Connected!");
+            }
+            else
+            {
+                Console.WriteLine("Error!");
+                Disconnect();
+            }
+
+        }
+
+        static void Disconnect()
+        {
+            sock.Close();
+        }
+
+        static void SendInput()
+        {
+            while (true) { 
+                byte[] msg = { 0x75, 0x32, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x01, 0x00, 0x00, 0x83, 0x02, 0x00, 0x00, 0x82, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+                sock.SendTo(msg, ipe);
+                Thread.Sleep(16);
+            }
+        }
+
+
     }
 }
