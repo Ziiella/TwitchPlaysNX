@@ -9,6 +9,15 @@ using System.Net.Sockets;
 
 namespace TwitchPlaysNX
 {
+
+    /* To-Do:
+        - Try to send at least one test input.
+        - Add reading input from the console for testing.
+        - Turn all this functionality into a Twitch bot. 
+    */
+
+
+
     class Program
     {
         public static int port;
@@ -30,9 +39,26 @@ namespace TwitchPlaysNX
             else
             {
                 port = 8080;
-                ipe = new IPEndPoint(long.Parse(args[0]), port);
-                sock = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                IPAddress address = IPAddress.Parse(args[0]);
+                ipe = new IPEndPoint(address, port);
+
+                sock = new Socket(ipe.AddressFamily, SocketType.Dgram, ProtocolType.Unspecified);
+
                 sock.Connect(ipe);
+
+                if (sock.Connected)
+                {
+                    Console.WriteLine("Connected!");
+                    //string message = "<HQiiii";
+                    //byte[] msg = BitConverter.GetBytes((long)message.Length) + BitConverter.GetBytes(0l) + message;
+                    //sock.SendTo(msg, ipe);
+                    sock.Close();
+                }
+                else
+                {
+                    Console.WriteLine("Error!");
+                    sock.Close();
+                }
 
 
             }
