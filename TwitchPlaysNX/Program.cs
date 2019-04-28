@@ -68,51 +68,15 @@ namespace TwitchPlaysNX
                 {
                     string command = Console.ReadLine();
 
-                    if(command == "A")
+                    switch (command)
                     {
-                        KeysPressed.ABXY += 0x01;
-                    }
-                    if (command == "B")
-                    {
-                        KeysPressed.ABXY += 0x02;
-                    }
-                    if (command == "X")
-                    {
-                        KeysPressed.ABXY += 0x04;
-                    }
-                    if (command == "Y")
-                    {
-                        KeysPressed.ABXY += 0x08;
-                    }
-                    if (command == "LST")
-                    {
-                        KeysPressed.ABXY += 0x10;
-                    }
-                    if (command == "RST")
-                    {
-                        KeysPressed.ABXY += 0x20;
+                        case "exit":
+                            Disconnect();
+                            sendThread.Abort();
+                            return;
 
                     }
-
-
-
-                    if (command == "plus")
-                    {
-                        KeysPressed.SecondSet += 0x08;
-                    }
-                    if (command == "foward")
-                    {
-                        dx_l = 900;
-                        dy_l = 1000;
-                        
-                    }
-                    if (command == "exit")
-                    {
-                        Disconnect();
-                        sendThread.Abort();
-                        return;
-                    }
-
+                    
 
                     Thread.Sleep(100);
                     KeysPressed.resetInput();
