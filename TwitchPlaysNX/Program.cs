@@ -20,7 +20,7 @@ namespace TwitchPlaysNX
 
     class Program
     {
-
+        static List<string> _Commands = new List<string> { "LDown", "LUp", "LLeft", "LRight", "wait" };
         static Dictionary<string, int> keys = new Dictionary<string, int>
         {
             { "A", 1 },
@@ -58,9 +58,9 @@ namespace TwitchPlaysNX
 
         static long keyInputs = 0;
         public static long keyout;
-        public static int dx_l = 385;
-        public static int dy_l = 643;
-        public static int dx_r = 642;
+        public static int dx_l = 0;
+        public static int dy_l = 0;
+        public static int dx_r = 0;
         public static int dy_r = 0;
 
 
@@ -94,6 +94,7 @@ namespace TwitchPlaysNX
                         case "exit":
                             Disconnect();
                             sendThread.Abort();
+                            commandThread.Abort();
                             return;
 
                         default:
@@ -163,7 +164,7 @@ namespace TwitchPlaysNX
             {
                 string[] args = commands[i].Split(' ');
 
-                if(args[0] != "wait")
+                if(!_Commands.Contains(args[0]))
                 {
                     if (!keys.ContainsKey(args[0]))
                     {
@@ -186,36 +187,124 @@ namespace TwitchPlaysNX
                 {
                     Thread.Sleep(20);
                     string[] args = Commands[0];
-                    if (args[0] == "wait")
+
+                    switch (args[0])
                     {
-                        Commands.RemoveAt(0);
-                        keyout = keyInputs; 
-                        Thread.Sleep(100);
+                        case "wait":
+                            Commands.RemoveAt(0);
+                            keyout = keyInputs;
+                            Thread.Sleep(100);
 
-                        if (args.Count() == 2)
-                        {
-                            int num = int.Parse(args[1]);
-                            keyInputs = 0;
-                            keyout = 0;
+                            if (args.Count() == 2)
+                            {
+                                int num = int.Parse(args[1]);
+                                keyInputs = 0;
+                                keyout = 0;
 
-                            if (num > 10) num = 10;
+                                if (num > 10000) num = 10000;
 
-                            Thread.Sleep(num);
-                        }
-                        else
-                            keyInputs = 0;
+                                Thread.Sleep(num);
+                            }
+                            else
+                                keyInputs = 0;
                             keyout = 0;
                             Thread.Sleep(1000);
+                            break;
+
+                        case "DONE":
+                                keyout = keyInputs;
+                                Commands.RemoveAt(0);
+                                Thread.Sleep(100);
+                                keyInputs = 0;
+                                keyout = 0;
+                            break;
+
                     }
 
-                    if (args[0] == "DONE")
+
+                    if (args[0] == "LDown")
                     {
-                        keyout = keyInputs;
+                        int wait = 500;
+                        if (args.Count() == 2)
+                        {
+                            wait = int.Parse(args[1]);
+
+                            if (wait > 10000) wait = 10000;
+                        }
+                        dx_l = 0;
+                        dy_l = -32767;
+
+                        Thread.Sleep(wait);
+                        dx_l = 0;
+                        dy_l = 0;
+
+
                         Commands.RemoveAt(0);
-                        Thread.Sleep(100);
-                        keyInputs = 0;
-                        keyout = 0;
                     }
+
+                    if (args[0] == "LUp")
+                    {
+                        int wait = 500;
+                        if (args.Count() == 2)
+                        {
+                            wait = int.Parse(args[1]);
+
+                            if (wait > 10000) wait = 10000;
+                        }
+                        dx_l = 0;
+                        dy_l = 32767;
+
+                        Thread.Sleep(wait);
+                        dx_l = 0;
+                        dy_l = 0;
+
+                        Commands.RemoveAt(0);
+                    }
+
+                    if (args[0] == "LRight")
+                    {
+                        int wait = 500;
+                        if (args.Count() == 2)
+                        {
+                            wait = int.Parse(args[1]);
+
+                            if (wait > 10000) wait = 10000;
+                        }
+                        dx_l = 32767;
+                        dy_l = 0;
+
+                        Thread.Sleep(wait);
+                        dx_l = 0;
+                        dy_l = 0;
+                        Commands.RemoveAt(0);
+                    }
+
+                    if (args[0] == "LLeft")
+                    {
+                        int wait = 500;
+                        if (args.Count() == 2)
+                        {
+                            wait = int.Parse(args[1]);
+
+                            if (wait > 10000) wait = 10000;
+                        }
+                        dx_l = -32767;
+                        dy_l = 0;
+
+                        Thread.Sleep(wait);
+                        dx_l = 0;
+                        dy_l = 0;
+                        Commands.RemoveAt(0);
+                    }
+
+                    //if (args[0] == "LU")
+                    //{
+                    //    keyout = keyInputs;
+                    //    Commands.RemoveAt(0);
+                    //    Thread.Sleep(100);
+                    //    keyInputs = 0;
+                    //    keyout = 0;
+                    //}
 
                     else if (keys.ContainsKey(args[0]))
                     {
