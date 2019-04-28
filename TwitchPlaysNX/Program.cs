@@ -17,7 +17,19 @@ namespace TwitchPlaysNX
         - Turn all this functionality into a Twitch bot. 
     */
 
+    class KeysPressed
+    {
+        public static byte ABXY = 0x00;
+        public static byte SecondSet = 0x00;
 
+
+        public static void resetInput()
+        {
+            ABXY = 0x00;
+            SecondSet = 0x00;
+        }
+
+    }
 
     class Program
     {
@@ -40,9 +52,45 @@ namespace TwitchPlaysNX
 
                 Thread sendThread = new Thread(new ThreadStart(SendInput));
                 sendThread.Start();
+
                 while (true)
                 {
+                    string command = Console.ReadLine();
 
+                    if(command == "a")
+                    {
+                        KeysPressed.ABXY += 0x01;
+                    }
+                    if (command == "b")
+                    {
+                        KeysPressed.ABXY += 0x02;
+                    }
+                    if (command == "x")
+                    {
+                        KeysPressed.ABXY += 0x04;
+                    }
+                    if (command == "y")
+                    {
+                        KeysPressed.ABXY += 0x08;
+                    }
+                    if (command == "plus")
+                    {
+                        KeysPressed.SecondSet += 0x08;
+                    }
+                    if (command == "minus")
+                    {
+                        KeysPressed.ABXY += 0x40;
+                    }
+                    if (command == "exit")
+                    {
+                        Disconnect();
+                        sendThread.Abort();
+                        return;
+                    }
+
+
+                    Thread.Sleep(100);
+                    KeysPressed.resetInput();
                 }
 
 
@@ -79,7 +127,7 @@ namespace TwitchPlaysNX
         static void SendInput()
         {
             while (true) { 
-                byte[] msg = { 0x75, 0x32, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x01, 0x00, 0x00, 0x83, 0x02, 0x00, 0x00, 0x82, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+                byte[] msg = { 0x75, 0x32, KeysPressed.ABXY, KeysPressed.SecondSet, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x01, 0x00, 0x00, 0x83, 0x02, 0x00, 0x00, 0x82, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
                 sock.SendTo(msg, ipe);
                 Thread.Sleep(16);
             }
