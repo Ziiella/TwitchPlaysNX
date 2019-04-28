@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchPlaysNX", "TwitchPlaysNX\TwitchPlaysNX.csproj", "{CBC096DB-BE03-4E3C-849E-A4CA9F74810D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{FA7FE24D-3DF0-41CE-8748-D95D4785EE98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{CBC096DB-BE03-4E3C-849E-A4CA9F74810D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBC096DB-BE03-4E3C-849E-A4CA9F74810D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBC096DB-BE03-4E3C-849E-A4CA9F74810D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA7FE24D-3DF0-41CE-8748-D95D4785EE98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA7FE24D-3DF0-41CE-8748-D95D4785EE98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA7FE24D-3DF0-41CE-8748-D95D4785EE98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA7FE24D-3DF0-41CE-8748-D95D4785EE98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

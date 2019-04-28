@@ -37,6 +37,17 @@ namespace TwitchPlaysNX
         public static IPEndPoint ipe;
         public static Socket sock;
 
+        public static long keyout;
+        public static int dx_l = 385;
+        public static int dy_l = 643;
+        public static int dx_r = 642;
+        public static int dy_r = 0;
+
+
+
+
+
+
         static void Main(string[] args)
         {
             if (args.Length == 0)
@@ -57,29 +68,43 @@ namespace TwitchPlaysNX
                 {
                     string command = Console.ReadLine();
 
-                    if(command == "a")
+                    if(command == "A")
                     {
                         KeysPressed.ABXY += 0x01;
                     }
-                    if (command == "b")
+                    if (command == "B")
                     {
                         KeysPressed.ABXY += 0x02;
                     }
-                    if (command == "x")
+                    if (command == "X")
                     {
                         KeysPressed.ABXY += 0x04;
                     }
-                    if (command == "y")
+                    if (command == "Y")
                     {
                         KeysPressed.ABXY += 0x08;
                     }
+                    if (command == "LST")
+                    {
+                        KeysPressed.ABXY += 0x10;
+                    }
+                    if (command == "RST")
+                    {
+                        KeysPressed.ABXY += 0x20;
+
+                    }
+
+
+
                     if (command == "plus")
                     {
                         KeysPressed.SecondSet += 0x08;
                     }
-                    if (command == "minus")
+                    if (command == "foward")
                     {
-                        KeysPressed.ABXY += 0x40;
+                        dx_l = 900;
+                        dy_l = 1000;
+                        
                     }
                     if (command == "exit")
                     {
@@ -126,8 +151,18 @@ namespace TwitchPlaysNX
 
         static void SendInput()
         {
-            while (true) { 
-                byte[] msg = { 0x75, 0x32, KeysPressed.ABXY, KeysPressed.SecondSet, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x01, 0x00, 0x00, 0x83, 0x02, 0x00, 0x00, 0x82, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            while (true) {
+
+                byte[] msg = new byte[26];
+                byte[] msgTemp = { 0x75, 0x32 };
+
+                msgTemp.CopyTo(msg, 0);
+                BitConverter.GetBytes(keyout).CopyTo(msg, 2);
+                BitConverter.GetBytes(dx_l).CopyTo(msg, 10);
+                BitConverter.GetBytes(dy_l).CopyTo(msg, 14);
+                BitConverter.GetBytes(dx_r).CopyTo(msg, 18);
+                BitConverter.GetBytes(dy_r).CopyTo(msg, 22);
+
                 sock.SendTo(msg, ipe);
                 Thread.Sleep(16);
             }
