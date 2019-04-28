@@ -17,22 +17,40 @@ namespace TwitchPlaysNX
         - Turn all this functionality into a Twitch bot. 
     */
 
-    class KeysPressed
-    {
-        public static byte ABXY = 0x00;
-        public static byte SecondSet = 0x00;
-
-
-        public static void resetInput()
-        {
-            ABXY = 0x00;
-            SecondSet = 0x00;
-        }
-
-    }
 
     class Program
     {
+
+        static Dictionary<string, int> keys = new Dictionary<string, int>
+        {
+            { "A", 1 },
+            { "B", 1 << 1 },
+            { "X", 1 << 2 },
+            { "Y", 1 << 3 },
+            { "LST", 1 << 4 },
+            { "RST", 1 << 5 },
+            { "L", 1 << 6 },
+            { "R", 1 << 7 },
+            { "ZL", 1 << 8 },
+            { "ZR", 1 << 9 },
+            { "PLUS", 1 << 10 },
+            { "MINUS", 1 << 11 },
+            { "DL", 1 << 12 },
+            { "DU", 1 << 13 },
+            { "DR", 1 << 14 },
+            { "DD", 1 << 15 },
+            { "LL", 1 << 16 },
+            { "LU", 1 << 17 },
+            { "LR", 1 << 18 },
+            { "LD", 1 << 19 },
+            { "RL", 1 << 20 },
+            { "RU", 1 << 21 },
+            { "RR", 1 << 22 },
+            { "RD", 1 << 23 }
+        };
+
+
+
         static int port = 8080;
         public static IPEndPoint ipe;
         public static Socket sock;
@@ -42,8 +60,6 @@ namespace TwitchPlaysNX
         public static int dy_l = 643;
         public static int dx_r = 642;
         public static int dy_r = 0;
-
-
 
 
 
@@ -75,11 +91,18 @@ namespace TwitchPlaysNX
                             sendThread.Abort();
                             return;
 
+                        default:
+                            int value = keys[command];
+                            if (keys.ContainsKey(command))
+                            {
+                                keyout |= keys[command];
+                            }
+                            break;
                     }
                     
 
                     Thread.Sleep(100);
-                    KeysPressed.resetInput();
+                    keyout = 0;
                 }
 
 
